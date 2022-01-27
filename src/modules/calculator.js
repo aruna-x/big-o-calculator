@@ -8,8 +8,8 @@ const estraverse = require('estraverse');
 
 function getBigO(dataType, code){
     // Char sets
-    // const alnum = 'abcdefghijklmnopqrstuvwxyz0123456789';
-    // const alpha = 'abcdefghijklmnopqrstuvwxyz';
+    // const alnum = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
     // const num = '0123456789';
 
     // Declare data sets
@@ -25,7 +25,15 @@ function getBigO(dataType, code){
             //     sets = n;
             //     n = [2,2,3,3,3,4,4,4];
             //     break;
-            // case "alpha-str":
+            case "alpha-str":
+                for (let i=0; i<n.length; i++){
+                    let str = '';
+                    for (let j=0; j<n[i]; j++) {
+                        str += alpha.charAt(Math.floor(Math.random() * alpha.length));
+                    }
+                    sets[i] = str;
+                }
+                break;
             // case "alpha-num-str":
             // case "alpha-num-spec-str":
             case "array-ints":
@@ -37,7 +45,6 @@ function getBigO(dataType, code){
                     sets[i] = arr;
                 }
                 break;
-            // case "array-rand-str":
             default:
                 break;
         }
@@ -180,7 +187,6 @@ function getBigO(dataType, code){
             // bigOEst = `O(${est})`;
         // }
 
-    // RETURN :   {error, bigO estimate, hottest lines}
     return {error: "none", bigOEst: bigOEst, hotLines: ["Coming Soon"]}
 }
 

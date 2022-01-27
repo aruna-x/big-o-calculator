@@ -5,19 +5,18 @@ import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
-// import 'prismjs/themes/prism-okaidia.css';
 import 'prismjs/themes/prism.css';
 import { esprima, escodegen, estraverse, getBigO } from './modules/calculator'
 
 function App() {
 
     const [result, setResult] = useState({
-        error: "empty",
+        error: "none",
         bigOEst: "",
         hotLines: []
     });
 
-    //  Seed function
+    // Seed function
     function constant(n){ 
         return n + n
     }
@@ -48,7 +47,7 @@ function App() {
                         minHeight: 200,
                         maxWidth: 650,
                         margin: 'auto auto',
-                        overflow: 'scroll',
+                        overflow: 'auto',
                     }}
                 />
             </EditorContainer>
@@ -56,10 +55,9 @@ function App() {
             <DataTypeContainer>
                 <label>Input data type:</label>
                 <Select id="dataType" name="dataType" value={dataType} onChange={(e)=>setDataType(e.target.value)}>
-                    <option value="integer">integer</option>
-                    {/* <option value="int-length-matters">integer (length matters)</option> */}
-                    <option value="array-ints">array of ints</option>
-                    {/* <option value="alpha-str">alpha only string</option> */}
+                    <option value="integer">int, e.g. 55</option>
+                    <option value="array-ints">array of ints, e.g. [3, 2, 77]</option>
+                    <option value="alpha-str">random string, e.g. StRiNgNoNums</option>
                     {/* <option value="alpha-num-str">alpha-numeric string</option> */}
                     {/* <option value="alpha-num-spec-str">alpha-numeric and special character string</option> */}
                     {/* <option value="array-rand-str">array of random strings</option> */}
@@ -77,10 +75,12 @@ function App() {
                     <p>{result.hotLines === [] ? null : result.hotLines[0]}</p>
                 </ResContainer>
             </FlexContainer>
+            <p>{result.error === "none" ? null : result.error}</p>
             <br/>
             <h5><em>JavaScript support only</em></h5>
             <h6><em>Able to compute O(1), O(log(n)), O(n), O(n^2). Pending: O(nlog(n)) and O(n^1/2).</em></h6>
-            <h5><em>Read about <a href="">how this calculator was built</a></em></h5>
+            <h5><em>Read about the technology that makes this app possible: <a href="https://dev.to/aruna/abstract-syntax-trees-theyre-used-everywhere-but-what-are-they-jh6">Abstract Syntax Trees (ASTs)</a></em></h5>
+            
         </PageStyle>
     );
 }
@@ -96,7 +96,7 @@ const PageStyle = styled.div`
 const EditorContainer = styled.div`
     margin-top: 40px;
     max-height: 400px;
-    overflow: scroll;
+    overflow: auto;
 `
 
 const DataTypeContainer = styled.div`
@@ -129,6 +129,3 @@ const Button = styled.button`
     padding: 5px;
     border: 1px solid rgba(0,0,0,.2);
 `
-// const P = styled.p`
-//     font-family: Fira code,Fira Mono,Consolas,Menlo,Courier,monospace;
-// `
