@@ -17,10 +17,22 @@ function App() {
     });
 
     // Seed function
-    function constant(n){ 
-        return n + n
+    function binarySearch(arr) {
+        let left = 0, right = arr.length-1;
+        while (left<=right) {
+          let middle = Math.floor((right-left)/2) + left;
+          if (arr[middle] === 30) {
+            return middle
+          }
+          else if (arr[middle] < 30) {
+            right = middle - 1;
+          }
+          else {
+            right = middle + 1;
+          }
+        }
     }
-    const ast = esprima.parse(`${constant}`);
+    const ast = esprima.parse(`${binarySearch}`);
     const code = escodegen.generate(ast);
 
     const [codeSubmit, setCodeSubmit] = useState(code);
@@ -57,7 +69,9 @@ function App() {
                 <Select id="dataType" name="dataType" value={dataType} onChange={(e)=>setDataType(e.target.value)}>
                     <option value="integer">int, e.g. 55</option>
                     <option value="array-ints">array of ints, e.g. [3, 2, 77]</option>
-                    <option value="alpha-str">random string, e.g. StRiNgNoNums</option>
+                    <option value="string">random string, e.g. StRiNgNoNums</option>
+                    <option value="array-strs">array of strings, e.g. ['aa', 'ab', 'ac']</option>
+                    
                     {/* <option value="alpha-num-str">alpha-numeric string</option> */}
                     {/* <option value="alpha-num-spec-str">alpha-numeric and special character string</option> */}
                     {/* <option value="array-rand-str">array of random strings</option> */}

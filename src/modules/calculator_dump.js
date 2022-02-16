@@ -48,13 +48,6 @@
      // 153, 4150, 548834, 1741725
 
 
-
-
-
-
-
-
-
     /**
      *   FUNCTIONS!
      */
@@ -65,6 +58,7 @@
                 arr[i]+=1;
             }
         }
+        // O(n)
 
         function squared(x) { 
             for(let i=0; i<x.length; i++){ 
@@ -73,6 +67,7 @@
                 } 
             }
         }
+        // O(n^2)
 
     // int
         function sqrt(num) {
@@ -83,10 +78,11 @@
             }
             return false;
         }
+        // O(sqrt(n))
 
 
         function constant(n){ return n + n }
-
+        // O(n)
 
         function log(n) {
             let c = 0;
@@ -95,9 +91,8 @@
             }
             return c;
         }
+        // O(log(n))
 
-
-        // log(n)
         function binarySearch(arr) {
             let left = 0, right = arr.length-1;
             while (left<=right) {
@@ -113,6 +108,7 @@
               }
             }
         }
+        // O(log(n))
 
 
         function nLog(n) {
@@ -125,5 +121,6 @@
             }
             return c;
         }
+        // O(nlog(n))
 
 

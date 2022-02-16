@@ -7,35 +7,27 @@ const escodegen = require('escodegen');
 const estraverse = require('estraverse');
 
 function getBigO(dataType, code){
+
+    // Default for error
+        let error = "none";
+
     // Char sets
-    // const alnum = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-    // const num = '0123456789';
+        const alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+        // const alnum = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        // const num = '0123456789';
 
     // Declare data sets
         let sets = [];
-        let n = [32, 64, 128, 256, 512];
+        let n = [ 256, 512, 1024, 2048, 4096];
+        //64, 128,
 
     // Populate data sets
         switch(dataType) {
+
             case "integer":
                 sets = n;
                 break;
-            // case "int-length-matters":
-            //     sets = n;
-            //     n = [2,2,3,3,3,4,4,4];
-            //     break;
-            case "alpha-str":
-                for (let i=0; i<n.length; i++){
-                    let str = '';
-                    for (let j=0; j<n[i]; j++) {
-                        str += alpha.charAt(Math.floor(Math.random() * alpha.length));
-                    }
-                    sets[i] = str;
-                }
-                break;
-            // case "alpha-num-str":
-            // case "alpha-num-spec-str":
+
             case "array-ints":
                 for (let i=0; i<n.length; i++){
                     let arr = [];
@@ -45,6 +37,33 @@ function getBigO(dataType, code){
                     sets[i] = arr;
                 }
                 break;
+
+            case "string":
+                for (let i=0; i<n.length; i++){
+                    let str = '';
+                    for (let j=0; j<n[i]; j++) {
+                        str += alpha.charAt(Math.floor(Math.random() * alpha.length));
+                    }
+                    sets[i] = str;
+                }
+                break;
+
+            case "array-strs":
+                for (let i=0; i<n.length; i++){
+                    let count = n[i];
+                    let arr = [];
+                    while (count>0) {
+                        let str = '';
+                        for (let j=0; j<n[i]; j++){
+                            str += alpha.charAt(Math.floor(Math.random() * alpha.length));
+                        }
+                        arr.push(str);
+                        count--;
+                    }
+                    sets[i] = arr;
+                }
+                break;
+
             default:
                 break;
         }
@@ -53,7 +72,7 @@ function getBigO(dataType, code){
     //what if they use "" in the code 
     //what about +=, -=
     
-    // BUILD AST 
+    // CREATE AST
 
         const ast = esprima.parse(`${code}`);
 
@@ -86,7 +105,6 @@ function getBigO(dataType, code){
 
     // CODE GEN / UNPARSE
 
-
         const modified = escodegen.generate(ast).replaceAll("\n", "");
 
 
@@ -103,91 +121,49 @@ function getBigO(dataType, code){
             );
         }
         
-        // console.log(counters)
-        console.log(counters[counters.length-1]-counters[counters.length-2])
-        console.log(counters[counters.length-2]-counters[counters.length-3])
+        let c1 = counters[counters.length-1];
+        let c2 = counters[counters.length-2];
+        let c3 = counters[counters.length-3];
+
+        let n1 = n[counters.length-1];
+        let n2 = n[counters.length-2];
+        let n3 = n[counters.length-3];
+
+        console.log("n", n);
+        console.log("counters", counters);
+
         let bigOEst;
-        if ((counters[counters.length-1] - counters[counters.length-2]) === 0) {
+
+        if ((c1 - c2) === 0) {
             bigOEst = "O(1)";
         }
-        // I can do this because I've made the data sets successively double in size
-        else if ((counters[counters.length-1] - counters[counters.length-2]) === (counters[counters.length-2] - counters[counters.length-3])) {
+        // Can do this because data sets successively double in size
+        else if ((c1 - c2) === (c2 - c3)) {
             bigOEst = "O(log(n))";
         }
+
+        /**
+         * ADD sqrt(n)
+         */
+
         // dividing by the *difference between the last 2 ns*, then making sure the result is less than that difference, ensures that this isn't a power of n
-        else if ((counters[counters.length-1] - counters[counters.length-2]) / (n[counters.length-1] - n[counters.length-2]) < n[counters.length-1] - n[counters.length-2]) {
-            // if (((counters[counters.length-1] - counters[counters.length-2]) / (n[counters.length-1] - n[counters.length-2]))/Math.log(n[counters.length-1] - n[counters.length-2]) < n[counters.length-1] - n[counters.length-2]){
-            //     bigOEst = "O(nlog(n))";
-            // }
-            // else {
-                bigOEst = "O(n)";
-            // }
-            console.log('counter:', counters)
-            console.log('n:', n)
+        else if ((c1 - c2) / (n1 - n2) < n1 - n2) {
+            bigOEst = "O(n)";
         }
-        else if ((counters[counters.length-1] - counters[counters.length-2]) / (n[counters.length-1] - n[counters.length-2]) >= n[counters.length-1] - n[counters.length-2]) {
+
+        /**
+         * ADD nlog(n)
+         */
+
+        // This accounts for multiples of n^2, but not n^3 or more :)
+        else if(((c1-c2)/(n1 - n2)) / (2*((c2-c3)/(n2 - n3))) <= 1){
             bigOEst = "O(n^2)";
         }
-        // else if (counters[counters.length-2]-counters[counters.length-3] > counters[counters.length-1]-counters[counters.length-2]){
-        //     console.log("sublinear!")
-        // }
-        // else if (counters[counters.length-2]-counters[counters.length-3] < counters[counters.length-1]-counters[counters.length-2]){
-        //     console.log("Here!")
-        // }
-        // else {
-        //     // make big o array
-        //     // ADD: log(n) and (2^n)
-        //     const ratioArr = [];
-        //     for (let i=0; i<n.length; i++) {
-        //         let tempArr=[];
-        //         tempArr.push();
-        //         tempArr.push(Math.abs(1 - counters[i] / Math.log(n[i])));
-        //         tempArr.push(Math.abs(1 - counters[i] / n[i]**0.5));
-        //         tempArr.push(Math.abs(1 - counters[i] / n[i]));
-        //         tempArr.push(Math.abs(1 - counters[i] / n[i]*Math.log(n[i])));
-        //         tempArr.push(Math.abs(1 - counters[i] / n[i]**2));
-        //         ratioArr.push(tempArr);
-        //     }
+        else {
+            error = "Looks like the function you entered has n^3 or greater time!"
+        }
 
-        //     for(let i=0;i<n.length; i++){
-        //         console.log('counter:',counters[i])
-        //         console.log('n:', n[i])
-        //         console.log('ratioArr:', ratioArr[i])
-        //     }
-
-        //     // console.log(ratioArr)
-        //     let closestMatch = 0;
-        //     for (let i=0; i<ratioArr[1].length; i++) {
-        //         if (ratioArr[1][i] < ratioArr[1][closestMatch]){
-        //             closestMatch = i;
-        //         }
-        //     }
-
-            // let est; 
-            // switch(closestMatch) {
-            //     case 0:
-            //         est = "log(n)";
-            //         break;
-            //     case 1:
-            //         est = "n^(1/2)"
-            //         break;
-            //     case 2:
-            //         est = "n"
-            //         break;
-            //     case 3:
-            //         est = "n * log(n)"
-            //         break;
-            //     case 4:
-            //         est = "n^2"
-            //         break;
-            //     default:
-            //         let error = "There was an error, try again!";
-            //         break;
-            // }
-            // bigOEst = `O(${est})`;
-        // }
-
-    return {error: "none", bigOEst: bigOEst, hotLines: ["Coming Soon"]}
+    return {error: error, bigOEst: bigOEst, hotLines: ["Coming Soon"]}
 }
 
 
