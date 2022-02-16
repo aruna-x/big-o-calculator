@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.js": "/big-o-calculator/static/js/main.e33268ac.chunk.js",
+    "main.js.map": "/big-o-calculator/static/js/main.e33268ac.chunk.js.map",
+    "runtime-main.js": "/big-o-calculator/static/js/runtime-main.fabd4877.js",
+    "runtime-main.js.map": "/big-o-calculator/static/js/runtime-main.fabd4877.js.map",
+    "static/css/2.0d8cb1d1.chunk.css": "/big-o-calculator/static/css/2.0d8cb1d1.chunk.css",
+    "static/js/2.e09787c7.chunk.js": "/big-o-calculator/static/js/2.e09787c7.chunk.js",
+    "static/js/2.e09787c7.chunk.js.map": "/big-o-calculator/static/js/2.e09787c7.chunk.js.map",
+    "index.html": "/big-o-calculator/index.html",
+    "static/css/2.0d8cb1d1.chunk.css.map": "/big-o-calculator/static/css/2.0d8cb1d1.chunk.css.map",
+    "static/js/2.e09787c7.chunk.js.LICENSE.txt": "/big-o-calculator/static/js/2.e09787c7.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.fabd4877.js",
+    "static/css/2.0d8cb1d1.chunk.css",
+    "static/js/2.e09787c7.chunk.js",
+    "static/js/main.e33268ac.chunk.js"
+  ]
+}
