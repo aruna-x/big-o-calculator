@@ -2,12 +2,10 @@
   "name": "big-o-calculator",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://aruna-x.github.io/big-o-calculator",
   "dependencies": {
     "escodegen": "^2.0.0",
     "esprima": "^4.0.1",
     "estraverse": "^5.3.0",
-    "gh-pages": "^3.2.3",
     "prismjs": "^1.25.0",
     "react": "^17.0.2",
     "react-scripts": "4.0.3",
@@ -19,9 +17,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "eject": "react-scripts eject"
   },
   "browserslist": {
     "production": [
